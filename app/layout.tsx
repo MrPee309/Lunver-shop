@@ -13,7 +13,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <header className="header">
           <div className="container header__inner">
             <div className="logo">
-              <img src="/assets/logo.svg" alt="Lunver-Shop logo" width="36" height="36" />
+              <img src="/assets/logo.png" alt="Lunver-Shop logo" width="50" height="50" />
               <span>Lunver-Shop</span>
             </div>
             <nav className="nav">
