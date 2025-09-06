@@ -4,8 +4,8 @@ export type Product = {
   price: number;
   image: string;      // relative path from /public
   description: string;
-  colors?: string[];
   sizes?: string[];
+  colors?: string[];
 };
 
 export const products: Product[] = [
@@ -14,8 +14,7 @@ export const products: Product[] = [
     name: "Backless Fitness Romper — 1379 Purple",
     price: 29.99,
     image: "/assets/products/jumpsuit-1379-purple-v2.jpeg",
-    description:
-      "Backless halter one-piece fitness romper. Twal elastik ki byen kenbe kò a pou sport oswa lifestyle.",
+    description: "Backless halter one-piece fitness romper.",
     sizes: ["S","M","L","XL"],
     colors: ["Purple"]
   },
@@ -24,8 +23,7 @@ export const products: Product[] = [
     name: "Classic Triangle Bikini — Brown",
     price: 18.99,
     image: "/assets/products/bikini-brown-v2.jpeg",
-    description:
-      "Two-piece triangle bikini ak tie-side bottom. Twal dou, seche rapid.",
+    description: "Two-piece triangle bikini ak tie-side bottom.",
     sizes: ["S","M","L"],
     colors: ["Brown","Black","Red","Green"]
   },
@@ -34,8 +32,7 @@ export const products: Product[] = [
     name: "Hearts Micro Bikini — Blue/Pink",
     price: 16.99,
     image: "/assets/products/hearts-blue-pink-v2.jpeg",
-    description:
-      "Micro bikini ak kòd trese, twal elastik, modèl kè ble/woz. Bèl pou plaj & pisin.",
+    description: "Micro bikini ak kòd trese, twal elastik, modèl kè ble/woz.",
     sizes: ["S","M","L"],
     colors: ["Blue/Pink"]
   },
@@ -44,8 +41,7 @@ export const products: Product[] = [
     name: "Underwire Bikini — Solid Green",
     price: 22.99,
     image: "/assets/products/underwire-green-v2.jpeg",
-    description:
-      "Bikini ak soutyen underwire pou bon sipò, bottom cut-out sexy. Twal kalite, rapid-sech.",
+    description: "Bikini ak soutyen underwire pou bon sipò; kilòt V-cut.",
     sizes: ["S","M","L"],
     colors: ["Green","Red","Black"]
   }
