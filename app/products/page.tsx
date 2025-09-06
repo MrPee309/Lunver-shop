@@ -1,45 +1,36 @@
-import { headers } from "next/headers";
-import type { Product } from "../api/products/route";
-
+// app/products/page.tsx
 export const dynamic = "force-dynamic";
 
+type Product = {
+  id:string; name:string; price:number; image:string; description:string;
+  sizes?:string[]; colors?:string[];
+};
+
 async function getProducts(): Promise<Product[]> {
-  const h = headers();
-  const host = h.get("host");
-  const protocol = process.env.VERCEL ? "https" : "http";
-  const baseUrl = `${protocol}://${host}`;
-  const res = await fetch(`${baseUrl}/api/products`, { cache: "no-store" });
-  if (!res.ok) {
-    throw new Error("Failed to load products");
-  }
-  const data = await res.json();
-  return data.products as Product[];
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL ?? ""}/api/products`, { cache: "no-store" });
+  if (!res.ok) throw new Error("Failed to load products");
+  return await res.json();
 }
 
 export default async function ProductsPage() {
   const products = await getProducts();
   return (
-    <main style={{ maxWidth: 1000, margin: "0 auto", padding: "24px" }}>
-      <h1 style={{ fontSize: 32, fontWeight: 800, marginBottom: 12 }}>Products</h1>
-      <p style={{ color: "#666", marginBottom: 24 }}>Data served by <code>/api/products</code></p>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px,1fr))", gap: 16 }}>
-        {products.map((p) => (
-          <div key={p.id} style={{ border: "1px solid #eee", borderRadius: 12, overflow: "hidden", background: "#fff" }}>
-            <div style={{ aspectRatio: "1 / 1", background: "#fafafa", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              {/* we use <img> to avoid Next/Image config for simplicity */}
-              <img src={p.image} alt={p.name} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "cover" }} />
+    <main style={{maxWidth:1100, margin:"0 auto", padding:"24px"}}>
+      <h1 style={{fontSize:28, fontWeight:800, marginBottom:12}}>Products</h1>
+      <ul style={{display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))", gap:16, listStyle:"none", padding:0}}>
+        {products.map(p => (
+          <li key={p.id} style={{border:"1px solid #eee", borderRadius:12, overflow:"hidden"}}>
+            <div style={{aspectRatio:"1/1", background:"#f6f6f6"}}>
+              <img src={p.image} alt={p.name} style={{width:"100%", height:"100%", objectFit:"cover"}} />
             </div>
-            <div style={{ padding: 14 }}>
-              <h3 style={{ margin: "0 0 8px", fontSize: 18 }}>{p.name}</h3>
-              <p style={{ margin: "0 0 10px", color: "#555" }}>{p.description}</p>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                <strong>${"{p.price.toFixed(2)}"}</strong>
-                <button style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #ddd" }}>Add to cart</button>
-              </div>
+            <div style={{padding:12}}>
+              <h3 style={{margin:"0 0 6px"}}>{p.name}</h3>
+              <div style={{fontWeight:700}}>${"{p.price.toFixed(2)}"}</div>
+              <p style={{color:"#555", marginTop:6}}>{p.description}</p>
             </div>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </main>
   );
 }
