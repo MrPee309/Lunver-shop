@@ -1,14 +1,9 @@
-// app/api/products/route.ts
 import { NextResponse } from 'next/server';
-import products from '../../../lib.data'; // default export or adjust if named
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+import { products } from '@/lib/data';
 
 export async function GET() {
-  return new NextResponse(JSON.stringify(products), {
-    headers: {
-      'content-type': 'application/json',
-      'cache-control': 'no-store, max-age=0',
-    },
+  // Return fresh data each request; avoids stale cache in Vercel
+  return NextResponse.json(products, {
+    headers: { 'Cache-Control': 'no-store' },
   });
 }
