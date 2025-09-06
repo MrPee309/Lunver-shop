@@ -1,62 +1,39 @@
-// app/products/page.tsx
-'use client';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import Image from 'next/image';
 
 type Product = {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  description: string;
-  colors?: string[];
-  sizes?: string[];
+  id:string; name:string; price:number; image:string; description:string;
+  colors?:string[]; sizes?:string[];
 };
 
-export default function ProductsPage() {
-  const [items, setItems] = useState<Product[] | null>(null);
-  const [err, setErr] = useState<string | null>(null);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch('/api/products', { cache: 'no-store' });
-        if (!res.ok) throw new Error('Failed to load products');
-        const data = await res.json();
-        setItems(data);
-      } catch (e: any) {
-        setErr(e?.message || 'Load error');
-      }
-    })();
-  }, []);
-
-  if (err) {
-    return <main style={{padding:'1.25rem'}}><p style={{color:'crimson'}}>Error: {err}</p></main>
+export default async function ProductsPage() {
+  const base = process.env.NEXT_PUBLIC_BASE_URL ?? '';
+  const res = await fetch(`${base}/api/products`, { cache: 'no-store' });
+  if (!res.ok) {
+    throw new Error('Failed to load products');
   }
-
-  if (!items) {
-    return <main style={{padding:'1.25rem'}}><p>Loading products…</p></main>
-  }
+  const products: Product[] = await res.json();
 
   return (
-    <main style={{maxWidth: 1100, margin: '0 auto', padding: '1.25rem'}}>
-      <h1>Products</h1>
-      <ul style={{display:'grid', gridTemplateColumns:'repeat(auto-fill, minmax(240px, 1fr))', gap:'1rem', listStyle:'none', padding:0}}>
-        {items.map((p) => (
-          <li key={p.id} style={{border:'1px solid #e5e7eb', borderRadius:12, overflow:'hidden', background:'#fff'}}>
-            <Link href={`/products/${p.id}`} style={{textDecoration:'none', color:'inherit', display:'block'}}>
-              <div style={{width:'100%', aspectRatio:'1/1', background:'#f3f4f6', display:'grid', placeItems:'center'}}>
-                {/* use plain <img> to avoid next/image cache issues */}
-                <img src={p.image} alt={p.name} style={{width:'100%', height:'100%', objectFit:'cover'}} />
-              </div>
-              <div style={{padding:'0.75rem 0.9rem 1.1rem'}}>
-                <h3 style={{margin:'0 0 0.25rem 0'}}>{p.name}</h3>
-                <div style={{fontWeight:700}}>${'{'}p.price.toFixed(2){'}'}</div>
-              </div>
-            </Link>
-          </li>
+    <main className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-6">Products</h1>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {products.map(p => (
+          <article key={p.id} className="rounded border p-4">
+            <div className="relative aspect-square mb-3 overflow-hidden rounded bg-gray-50">
+              <Image
+                src={p.image}
+                alt={p.name}
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                style={{objectFit:'cover'}}
+              />
+            </div>
+            <h2 className="font-semibold">{p.name}</h2>
+            <p className="text-sm text-gray-600">${'{'}p.price.toFixed(2){'}'}</p>
+            <p className="text-sm mt-2">{p.description}</p>
+          </article>
         ))}
-      </ul>
+      </div>
     </main>
   );
 }
